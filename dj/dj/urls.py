@@ -19,6 +19,9 @@ from django.urls import path
 from uktio import views
 
 urlpatterns = [
-    path('', views.index, name="index"),
+    path('', views.main),
+    path('main', views.main, name='main'),
+    path('index', views.index, name="index"),
+    path('about', views.about, name='about'),
     path('adminis/', admin.site.urls),
 ]

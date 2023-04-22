@@ -24,7 +24,7 @@ class Users(models.Model):
     
     
 class Region(models.Model):
-    name = models.CharField(max_length="200", unique=False,
+    name = models.CharField(max_length=200, unique=False,
                             verbose_name="Name of Region",
                             help_text="Enter name of Region")
     
