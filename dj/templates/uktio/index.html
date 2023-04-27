@@ -94,17 +94,17 @@
   <body class="text-center">
    
     <main class="form-signin w-100 m-auto">
-    <form method="POST" action="">
+    <form method="POST" action="index">
       {% csrf_token %}
         <img class="mb-4" src="{%static 'img/bootstrap-logo.svg' %}" alt="" width="72" height="57">
         <h1 class="h3 mb-3 fw-normal">{%trans 'please_logon'%}</h1>
 
         <div class="form-floating">
-        <input type="text" class="form-control" id="floatingInput" placeholder="{%trans 'login'%}">
+        <input type="text" class="form-control" name="login" id="floatingInput" placeholder="{%trans 'login'%}">
         <label for="floatingInput">{%trans 'login'%}</label>
         </div>
         <div class="form-floating">
-        <input type="password" class="form-control" id="floatingPassword" placeholder="{%trans 'password'%}">
+        <input type="password" class="form-control" name="password" id="floatingPassword" placeholder="{%trans 'password'%}">
         <label for="floatingPassword">{%trans 'password'%}</label>
         </div>
 
