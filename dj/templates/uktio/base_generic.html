@@ -29,6 +29,7 @@
 </head>
 
 <body>
+  {% if user %}
     {%block header %}
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <div class="container-fluid">
@@ -63,7 +64,8 @@
                     </li>
                 </ul>
                 <form class="d-flex">
-                    <a class="navbar-brand" aria-current="page" href="#">User</a>
+                    <a class="navbar-brand" aria-current="page" href="#">{{ user.login}}</a>
+                    <a class="navbar-brand" aria-current="page" href="index">{%trans 'Exit'%}</a>
                 </form>
             </div>
         </div>
@@ -89,5 +91,6 @@
     {%endblock%}
 
     <script src="{%static 'js/bootstrap.bundle.min.js'%}"></script>  
+  {% endif %}
 </body>
 </html>

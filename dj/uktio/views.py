@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponseNotFound
 from .models import *
 
 
@@ -13,14 +13,26 @@ def index(request:HttpRequest):
                if user_qset.exists():
                    user = user_qset.first()
                    request.session['user'] = user.id
-                   return render(request, 'uktio/main.html')
-        return render(request, 'uktio/index.html', context=
+                   context = {"user": user}
+                   return render(request, 'uktio/main.html', context=context)
+        del request.session['user']
+        return render(request, 'uktio/index.html', 
                         {'message': 'Wrong user or password'})
     else:
+        del request.session['user'] 
         return render(request, 'uktio/index.html')
 
 def main(request:HttpRequest):
-    return render(request, "uktio/main.html")
+    user_id = request.session.get('user', None)
+    user = None
+    if user_id:
+        user = Users.objects.get(id=user_id)
+    else:
+        return HttpResponseNotFound("<h1>No user</h1>")
+        
+    
+    context = {"user": user}
+    return render(request, 'uktio/main.html', context=context)
 
 def about(request:HttpRequest):
     return render(request, "uktio/about.html")
