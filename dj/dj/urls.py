@@ -23,5 +23,7 @@ urlpatterns = [
     path('main', views.main, name='main'),
     path('index', views.index, name="index"),
     path('about', views.about, name='about'),
+    path('region', views.region, name='region'),
+    path('clear_session', views.clear_session, name='clear_session'),
     path('adminis/', admin.site.urls),
 ]
