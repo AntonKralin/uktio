@@ -19,6 +19,7 @@ class Users(models.Model):
     is_view = models.BooleanField(default=True,
                                   verbose_name="Is user only view",
                                   help_text='True - only view, default=True')
+    region = models.ManyToManyField('Region', help_text="Regions")
     
     objects = models.Manager()
     

@@ -1,14 +1,29 @@
 {% extends "uktio/base_generic.html"%}
+{% load i18n %}
 
 {%block content%}
     <div class="container">
     <div class="row">
         <p></p>
         <div class="col-5">
-            ads
+            {% if regions %}
+                {% for i_region in regions.all %}
+                    <p>
+                        {{i_region.name}}
+                        <a href="/region/{{i_region.id}}">{% trans 'Change' %}</a>
+                        <a href="/delete_region/{{i_region.id}}">{% trans 'Delete' %}</a>
+                    </p>
+                {% endfor %}
+            {% endif%}
         </div>
         <div class="col-5">
-            1111
+            <form action="save_region" method="POST">
+                {% csrf_token %}
+                <table>
+                    {{region_form}}
+                </table>
+                <input type="submit" value="{% trans 'Save' %}" />
+            </form>
         </div>
     </div>
     </div>

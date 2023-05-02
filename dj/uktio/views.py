@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from django.http import HttpRequest, HttpResponseNotFound
+from django.http import HttpRequest, HttpResponseNotFound, HttpResponsePermanentRedirect
 from .models import *
+from .forms import *
 
 
 # Create your views here.
@@ -45,33 +46,48 @@ def main(request:HttpRequest):
 def about(request:HttpRequest):
     return render(request, "uktio/about.html")
 
-def region(request:HttpRequest):
-    return render(request, 'uktio/region.html')
+def region(request:HttpRequest, id=""):
+    user_id = request.session.get('user', None)
+    if user_id:
+        region_form = RegionForm()
+        if id != "":
+            edit_region = Region.objects.get(id=id)
+            region_form = RegionForm(initial={"id":edit_region.id, 'name':edit_region.name})
+            
+        user = Users.objects.get(id=user_id)
+        regions = user.region.all()
+        context = {'region_form': region_form,
+                   'regions': regions}
+        return render(request, 'uktio/region.html', context=context)
+    return HttpResponseNotFound('<h1>No user</h1>')
 
-def edit_region(request:HttpRequest, id:int):
-    try:
-        region = Region.objects.get(id=id)
-        if request.method == "POST":
-            name = request.POST.get('name')
-            region.name = name
-            region.save()
-            render(request, 'uktio/region.html')
-    except Region.DoesNotExist:
-        HttpResponseNotFound("<h2>Not found id</h2>")
-
-def add_region(request:HttpRequest):
+def save_region(request:HttpRequest):
     if request.method == "POST":
         name = request.POST.get("name")
-        region = Region(name=name)
+        id = request.POST.get("id")
+        if id == "":
+            region = Region(name=name)
+        else:
+            try:
+                region = Region.objects.get(id=id)
+                if request.method == "POST":
+                    name = request.POST.get('name')
+                    region.name = name
+            except Region.DoesNotExist:
+                HttpResponseNotFound("<h2>Not found id</h2>")
+        
         region.save()
-        return render(request, "uktio/region.html")
+        id_user = request.session.get('user')
+        user = Users.objects.get(id=id_user)
+        user.region.add(region)
+        return HttpResponsePermanentRedirect("/region")
     return HttpResponseNotFound("<h2>Does not found name</h2>")
 
 def delete_region(request:HttpRequest, id:int):
     try:
         region = Region.objects.get(id=id)
         region.delete()
-        return render(request, 'uktio/region.html')
+        return HttpResponsePermanentRedirect('/region')
     except Region.DoesNotExist:
         return HttpResponseNotFound('<h2>Region not found</h2>')
 
