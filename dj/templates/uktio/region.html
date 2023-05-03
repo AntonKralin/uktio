@@ -7,17 +7,21 @@
         <p></p>
         <div class="col-5">
             {% if regions %}
+                <table>
                 {% for i_region in regions.all %}
                     <p>
-                        {{i_region.name}}
-                        <a href="/region/{{i_region.id}}">{% trans 'Change' %}</a>
-                        <a href="/delete_region/{{i_region.id}}">{% trans 'Delete' %}</a>
+                        <tr>
+                        <td>{{i_region.name}}</td>
+                        <td><a href="/region/{{i_region.id}}">{% trans 'Change' %}</a></td>
+                        <td><a href="/delete_region/{{i_region.id}}">{% trans 'Delete' %}</a></td>
+                        </td>
                     </p>
                 {% endfor %}
+                </table>
             {% endif%}
         </div>
         <div class="col-5">
-            <form action="save_region" method="POST">
+            <form action="/save_region" method="POST">
                 {% csrf_token %}
                 <table>
                     {{region_form}}
