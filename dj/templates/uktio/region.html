@@ -11,10 +11,10 @@
                 {% for i_region in regions.all %}
                     <p>
                         <tr>
-                        <td>{{i_region.name}}</td>
-                        <td><a href="/region/{{i_region.id}}">{% trans 'Change' %}</a></td>
-                        <td><a href="/delete_region/{{i_region.id}}">{% trans 'Delete' %}</a></td>
-                        </td>
+                            <td>{{i_region.name}}</td>
+                            <td><a href="/region/{{i_region.id}}">{% trans 'Change' %}</a></td>
+                            <td><a href="/delete_region/{{i_region.id}}">{% trans 'Delete' %}</a></td>
+                        </tr>
                     </p>
                 {% endfor %}
                 </table>

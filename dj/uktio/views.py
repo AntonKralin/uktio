@@ -95,15 +95,20 @@ def delete_region(request:HttpRequest, id:int):
 def organization(request:HttpRequest, id=''):
     user_id = request.session.get('user', None)
     if user_id:
-        organization_form = OrganizationForm()
         user = Users.objects.get(id=user_id)
+        
+        organization_form = OrganizationForm() 
         query_regions = user.region.all()
-        query_organization = user.subordinate.all()
+        query_organization = user.organization.all()
         select_region = region_query_to_select(query_regions)
         select_organization = organization_query_to_select(query_organization)
         organization_form.fields["region"].choices = select_region
         organization_form.fields["subordinate"].choices = select_organization
-        context = {"organization_form": organization_form}
+        
+        org_list = user.organization.all()
+        
+        context = {"organization_form": organization_form,
+                   "organizations": org_list}
         return render(request, "uktio/organization.html", context)
     return HttpResponseNotFound("<h1>Not logon</h1>")
 
@@ -113,21 +118,27 @@ def save_organization(request:HttpRequest):
         name = request.POST.get("name", '')
         city = request.POST.get("city", '')
         address = request.POST.get("address", '')
-        telefone = request.POST.get("telefone", '')
+        telephone = request.POST.get("telefone", '')
         id_region = request.POST.get("region", None)
-        id_subordinate = request.PST.get("subordinate", None)
+        id_subordinate = request.POST.get("subordinate", None)
         
+        region = None
         if id_region:
             region = Region.objects.get(id=id_region)
             
+        sub_org = None
         if id_subordinate:
             sub_org = Organization.objects.get(id=id_subordinate)
         
-        organization = Organization(id=id_org, name=name, city=city, 
-                                    address=address, telefone= telefone,
+        organization = Organization(name=name, city=city, 
+                                    address=address, telephone= telephone,
                                     region=region, subordinate=sub_org)
-
         organization.save()
+        
+        user_id = request.session.get('user', None)
+        user = Users.objects.get(id=user_id)
+        user.organization.add(organization)
+        user.save
         
     return HttpResponsePermanentRedirect("/organization")
 

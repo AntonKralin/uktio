@@ -6,7 +6,30 @@
     <div class="row">
         <p></p>
         <div class="col-6">
-            1
+            <table>
+                <thead>
+                    <th>{%trans 'Name'%}</th>
+                    <th>{%trans 'City'%}</th>
+                    <th>{%trans 'Address'%}</th>
+                    <th>{%trans 'Telephone'%}</th>
+                    <th>{%trans 'Region'%}</th>
+                    <th>{%trans 'Subordinate'%}</th>
+                </thead>
+                <p>
+                {% if organizations %}
+                    {% for i_org in organizations.all %}
+                        <tr>
+                            <td>{{i_org.name}}</td>
+                            <td>{{i_org.city}}</td>
+                            <td>{{i_org.address}}</td>
+                            <td>{{i_org.telephone}}</td>
+                            <td>{{i_org.region.name}}</td>
+                            <td>{{i_org.subordinate.name}}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+                </p>
+            </table>
         </div>
         <div class="col-6">
             <form action="/save_organization" method="POST">
@@ -14,8 +37,8 @@
                 <table>
                     {{organization_form}}
                 </table>
+                <input type="submit" value="{%trans 'Save'%}" />
             </form>
-            <input type="submit" value="{%trans 'Save'%}"
         </div>
     </div>
     </div>
