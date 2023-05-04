@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpRequest, HttpResponseNotFound, HttpResponsePermanentRedirect
 from .models import *
 from .forms import *
+from .functions import *
 
 
 # Create your views here.
@@ -90,6 +91,45 @@ def delete_region(request:HttpRequest, id:int):
         return HttpResponsePermanentRedirect('/region')
     except Region.DoesNotExist:
         return HttpResponseNotFound('<h2>Region not found</h2>')
+
+def organization(request:HttpRequest, id=''):
+    user_id = request.session.get('user', None)
+    if user_id:
+        organization_form = OrganizationForm()
+        user = Users.objects.get(id=user_id)
+        query_regions = user.region.all()
+        query_organization = user.subordinate.all()
+        select_region = region_query_to_select(query_regions)
+        select_organization = organization_query_to_select(query_organization)
+        organization_form.fields["region"].choices = select_region
+        organization_form.fields["subordinate"].choices = select_organization
+        context = {"organization_form": organization_form}
+        return render(request, "uktio/organization.html", context)
+    return HttpResponseNotFound("<h1>Not logon</h1>")
+
+def save_organization(request:HttpRequest):
+    if request.method == "POST":
+        id_org = request.POST.get("id", '')
+        name = request.POST.get("name", '')
+        city = request.POST.get("city", '')
+        address = request.POST.get("address", '')
+        telefone = request.POST.get("telefone", '')
+        id_region = request.POST.get("region", None)
+        id_subordinate = request.PST.get("subordinate", None)
+        
+        if id_region:
+            region = Region.objects.get(id=id_region)
+            
+        if id_subordinate:
+            sub_org = Organization.objects.get(id=id_subordinate)
+        
+        organization = Organization(id=id_org, name=name, city=city, 
+                                    address=address, telefone= telefone,
+                                    region=region, subordinate=sub_org)
+
+        organization.save()
+        
+    return HttpResponsePermanentRedirect("/organization")
 
 def clear_session(request:HttpRequest):
     request.session.clear()

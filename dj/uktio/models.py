@@ -20,6 +20,7 @@ class Users(models.Model):
                                   verbose_name="Is user only view",
                                   help_text='True - only view, default=True')
     region = models.ManyToManyField('Region', help_text="Regions")
+    organization = models.ManyToManyField('Organization', help_text="Organization")
     
     objects = models.Manager()
     
@@ -41,8 +42,8 @@ class Organization(models.Model):
                                verbose_name="address", help_text="Enter address")
     telephone = models.CharField(max_length=20, blank=True, unique=False,
                                  verbose_name="telephone", help_text="Enter telephone number")
-    id_region = models.ForeignKey(Region, on_delete=models.CASCADE)
-    id_subordinate = models.ForeignKey("self", on_delete=models.SET_NULL, 
+    region = models.ForeignKey(Region, on_delete=models.CASCADE)
+    subordinate = models.ForeignKey("self", on_delete=models.SET_NULL, 
                                        blank=True, null=True)
 
     objects = models.Manager()

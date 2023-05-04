@@ -23,10 +23,12 @@ urlpatterns = [
     path('main', views.main, name='main'),
     path('index', views.index, name="index"),
     path('about', views.about, name='about'),
+    path('region/<int:id>', views.region, name='edit_region'),
     path('region', views.region, name='region'),
     path('save_region', views.save_region, name='save_region'),
     path('delete_region/<int:id>', views.delete_region, name="delete_region"),
-    path('region/<int:id>', views.region, name='edit_region'),
+    path('organization', views.organization, name='organization'),
+    path('save_organization', views.save_organization, name='save_organization'),
     path('clear_session', views.clear_session, name='clear_session'),
     path('adminis/', admin.site.urls),
 ]
