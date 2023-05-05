@@ -5,8 +5,8 @@
     <div class="container">
     <div class="row">
         <p></p>
-        <div class="col-6">
-            <table>
+        <div class="col-8">
+            <table class="table table-striped">
                 <thead>
                     <th>{%trans 'Name'%}</th>
                     <th>{%trans 'City'%}</th>
@@ -25,13 +25,15 @@
                             <td>{{i_org.telephone}}</td>
                             <td>{{i_org.region.name}}</td>
                             <td>{{i_org.subordinate.name}}</td>
+                            <td><a href="/organization/{{i_org.id}}">{% trans 'Change' %}</a></td>
+                            <td><a href="/delete_organization/{{i_org.id}}">{% trans 'Delete' %}</a></td>
                         </tr>
                     {% endfor %}
                 {% endif %}
                 </p>
             </table>
         </div>
-        <div class="col-6">
+        <div class="col-4">
             <form action="/save_organization" method="POST">
                 {% csrf_token %}
                 <table>

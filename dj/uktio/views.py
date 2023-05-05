@@ -102,8 +102,23 @@ def organization(request:HttpRequest, id=''):
         query_organization = user.organization.all()
         select_region = region_query_to_select(query_regions)
         select_organization = organization_query_to_select(query_organization)
+        select_organization = [(None, "")] + select_organization
         organization_form.fields["region"].choices = select_region
         organization_form.fields["subordinate"].choices = select_organization
+        
+        if id != '':
+            try:
+                edit_org = Organization.objects.get(id=id)
+                organization_form.fields["id"].initial = id
+                organization_form.fields["name"].initial = edit_org.name
+                organization_form.fields["city"].initial = edit_org.city
+                organization_form.fields["address"].initial = edit_org.address
+                organization_form.fields["telefone"].initial = edit_org.telephone
+                organization_form.initial["region"] = edit_org.region.id
+                if edit_org.subordinate:
+                    organization_form.initial["subordinate"] = edit_org.subordinate.id
+            except Organization.DoesNotExist:
+                return HttpResponseNotFound("<h1>Wrong organization<h1>")
         
         org_list = user.organization.all()
         
@@ -130,9 +145,18 @@ def save_organization(request:HttpRequest):
         if id_subordinate:
             sub_org = Organization.objects.get(id=id_subordinate)
         
-        organization = Organization(name=name, city=city, 
-                                    address=address, telephone= telephone,
+        if id_org == '':
+            organization = Organization(name=name, city=city, 
+                                    address=address, telephone=telephone,
                                     region=region, subordinate=sub_org)
+        else:
+            organization = Organization.objects.get(id=id_org)
+            organization.name = name
+            organization.city = city
+            organization.address = address
+            organization.telephone = telephone
+            organization.region = region
+            organization.subordinate=sub_org
         organization.save()
         
         user_id = request.session.get('user', None)
@@ -140,6 +164,16 @@ def save_organization(request:HttpRequest):
         user.organization.add(organization)
         user.save
         
+    return HttpResponsePermanentRedirect("/organization")
+
+def delete_organization(request:HttpRequest, id:int):
+    print(id)
+    try:
+        buf_org = Organization.objects.get(id=id)
+        buf_org.delete()
+        return HttpResponsePermanentRedirect("/organization")
+    except Organization.DoesNotExist:
+        return HttpResponseNotFound('<h1>Organization not found</h1>')
     return HttpResponsePermanentRedirect("/organization")
 
 def clear_session(request:HttpRequest):

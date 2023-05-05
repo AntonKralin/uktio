@@ -7,7 +7,7 @@ class RegionForm(forms.Form):
     
     
 class OrganizationForm(forms.Form):
-    id = forms.CharField(widget=forms.HiddenInput, required=False, initial="")
+    id = forms.CharField(widget=forms.HiddenInput(), required=False, initial="")
     name = forms.CharField(label='Название организации')
     city = forms.CharField(label='Город')
     address = forms.CharField(label='Адрес')

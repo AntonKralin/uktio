@@ -27,8 +27,10 @@ urlpatterns = [
     path('region', views.region, name='region'),
     path('save_region', views.save_region, name='save_region'),
     path('delete_region/<int:id>', views.delete_region, name="delete_region"),
+    path('organization/<int:id>', views.organization, name='edit_organization'),
     path('organization', views.organization, name='organization'),
     path('save_organization', views.save_organization, name='save_organization'),
+    path('delete_organization/<int:id>', views.delete_organization, name='delete_organization'),
     path('clear_session', views.clear_session, name='clear_session'),
     path('adminis/', admin.site.urls),
 ]
