@@ -16,3 +16,12 @@ class OrganizationForm(forms.Form):
     subordinate = forms.ChoiceField(choices=[], required=False, 
                                     label="Подчиняется")
     
+
+class WorkerForm(forms.Form):
+    id = forms.CharField(widget=forms.HiddenInput(), required=False, initial="")
+    name = forms.CharField(label="Имя")
+    surname = forms.CharField(label="Фамилия")
+    job = forms.CharField(label="Должность")
+    organization = forms.ChoiceField(choices=[], required=True,
+                                     label="Организация")
+    

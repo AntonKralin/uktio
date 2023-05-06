@@ -56,7 +56,7 @@ class Workers(models.Model):
                             verbose_name="Name", help_text="Enter name")
     job = models.CharField(max_length=200, blank=True, default=None,
                            verbose_name="Job", help_text="Enter job")
-    id_organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     
     objects = models.Manager()
     
@@ -67,7 +67,7 @@ class Cabinet(models.Model):
     description = models.CharField(max_length=200, blank=True, null=True, 
                                    verbose_name='Description',
                                    help_text='Enter description')
-    id_organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     
     objects = models.Manager()
     

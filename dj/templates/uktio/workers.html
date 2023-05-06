@@ -1,0 +1,51 @@
+{% extends "uktio/base_generic.html"%}
+{% load i18n %}
+
+{%block content%}
+    <div class="container">
+    <div class="row">
+        <p></p>
+        <div class="col-6">
+            {% if workers %}
+                <table class="table table-striped" id="DataTable">
+                    <thead>
+                        <tr>
+                            <th>{%trans 'Name'%}</th>
+                            <th>{%trans 'Surname'%}</th>
+                            <th>{%trans 'Job'%}</th>
+                            <th>{%trans 'Organizations'%}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for i_worker in workers.all %}
+                        <tr>
+                            <td>{{i_worker.name}}</td>
+                            <td>{{i_worker.surname}}</td>
+                            <td>{{i_worker.job}}</td>
+                            <td>{{i_worker.organization.name}}</td>
+                            <td><a href='/workers/{{i_worker.id}}'>{%trans 'Change'%}</a></td>
+                            <td><a href='/delete_worker/{{i_worker.id}}'>{%trans 'Delete'%}</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif%}
+        </div>
+        <div class="col-6">
+            <form action="/save_worker" method="POST">
+                {% csrf_token %}
+                <table>
+                    {{worker_form}}
+                </table>
+                <input type="submit" value="{% trans 'Save' %}" />
+            </form>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#DataTable').DataTable();
+        });
+    </script>
+{%endblock%}

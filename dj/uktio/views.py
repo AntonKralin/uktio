@@ -167,7 +167,6 @@ def save_organization(request:HttpRequest):
     return HttpResponsePermanentRedirect("/organization")
 
 def delete_organization(request:HttpRequest, id:int):
-    print(id)
     try:
         buf_org = Organization.objects.get(id=id)
         buf_org.delete()
@@ -175,6 +174,49 @@ def delete_organization(request:HttpRequest, id:int):
     except Organization.DoesNotExist:
         return HttpResponseNotFound('<h1>Organization not found</h1>')
     return HttpResponsePermanentRedirect("/organization")
+
+def workers(request:HttpRequest, id=''):
+    id_user = request.session.get('user', None)
+    if id_user:
+        user = Users.objects.get(id=id_user)
+        query_orgs = user.organization.all()
+        orgs = organization_query_to_select(query_orgs)
+        workers_form = WorkerForm()
+        workers_form.fields["organization"].choices = orgs
+        
+        workers = Workers.objects.all()
+        
+        if id != '':
+            worker = Workers.objects.get(id=id)
+            workers_form.fields["name"].initial = worker.name
+            workers_form.fields["surname"].initial = worker.surname
+            workers_form.fields["job"].initial = worker.job
+            workers_form.initial["organization"] =worker.organization.id
+        
+        context = {"worker_form": workers_form,
+                   "workers": workers}
+        return render(request, 'uktio/workers.html', context=context)
+    return HttpResponseNotFound("<h1>please logon</h1>")
+
+def save_worker(request:HttpRequest, id=''):
+    if request.method == 'POST':
+        name = request.POST.get("name")
+        surname = request.POST.get("surname")
+        job = request.POST.get("job")
+        id_org = request.POST.get("organization")
+        org = Organization.objects.get(id=id_org)
+        
+        worker = Workers(name=name, surname=surname, job=job, organization=org)
+        worker.save()
+        
+    return HttpResponsePermanentRedirect('/workers')
+
+def delete_worker(request:HttpRequest, id=None):
+    if id:
+        worker = Workers.objects.get(id=id)
+        worker.delete()
+        return HttpResponsePermanentRedirect("/workers")
+    return HttpResponsePermanentRedirect("<h1>worker not foutd</h1>")
 
 def clear_session(request:HttpRequest):
     request.session.clear()
