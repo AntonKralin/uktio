@@ -184,10 +184,12 @@ def workers(request:HttpRequest, id=''):
         workers_form = WorkerForm()
         workers_form.fields["organization"].choices = orgs
         
-        workers = Workers.objects.all()
+        #workers = Workers.objects.all()
+        workers = Workers.objects.filter(organization__in=user.organization.all())
         
         if id != '':
             worker = Workers.objects.get(id=id)
+            workers_form.fields["id"].initial = worker.id
             workers_form.fields["name"].initial = worker.name
             workers_form.fields["surname"].initial = worker.surname
             workers_form.fields["job"].initial = worker.job
@@ -198,15 +200,24 @@ def workers(request:HttpRequest, id=''):
         return render(request, 'uktio/workers.html', context=context)
     return HttpResponseNotFound("<h1>please logon</h1>")
 
-def save_worker(request:HttpRequest, id=''):
+def save_worker(request:HttpRequest):
     if request.method == 'POST':
+        id_worker = request.POST.get('id', None)
         name = request.POST.get("name")
         surname = request.POST.get("surname")
         job = request.POST.get("job")
         id_org = request.POST.get("organization")
         org = Organization.objects.get(id=id_org)
         
-        worker = Workers(name=name, surname=surname, job=job, organization=org)
+        if not id_worker:
+            worker = Workers(name=name, surname=surname, job=job, organization=org)
+        else:
+            worker = Workers.objects.get(id=id_worker)
+            worker.name = name
+            worker.surname = surname
+            worker.job = job
+            worker.organization = org
+            
         worker.save()
         
     return HttpResponsePermanentRedirect('/workers')
@@ -217,6 +228,55 @@ def delete_worker(request:HttpRequest, id=None):
         worker.delete()
         return HttpResponsePermanentRedirect("/workers")
     return HttpResponsePermanentRedirect("<h1>worker not foutd</h1>")
+
+def cabinets(request:HttpRequest, id=""):
+    id_user = request.session.get('user', None)
+    if id_user:
+        user = Users.objects.get(id=id_user)
+        query_org = user.organization.all()
+        org = organization_query_to_select(query_org)
+        cabinet_form = CabinetForm()
+        cabinet_form.fields["organization"].choices = org
+        
+        if id != "":
+            cabinet = Cabinet.objects.get(id=id)
+            cabinet_form.fields['name'].initial = cabinet.name
+            cabinet_form.fields['description'].initial = cabinet.description
+            cabinet_form.initial['organization'] = cabinet.organization.id
+            cabinet_form.fields['id'].initial = cabinet.id
+        
+        cabinets = Cabinet.objects.filter(organization__in=user.organization.all())
+        
+        context = {"cabinet_form": cabinet_form,
+                   "cabinets": cabinets}
+        return render(request, 'uktio/cabinets.html', context=context)
+    return HttpResponseNotFound("<h1>Please logon</h1>")
+
+def save_cabinet(request:HttpRequest):
+    if request.method == "POST":
+        id_cabinet = request.POST.get('id', None)
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        org_id = request.POST.get('organization')
+        org = Organization.objects.get(id=org_id)
+        
+        if id_cabinet:
+            cabinet = Cabinet.objects.get(id=id_cabinet)
+            cabinet.name = name
+            cabinet.description = description
+            cabinet.organization = org
+        else:
+            cabinet = Cabinet(name=name, description=description, organization=org)
+        cabinet.save()
+        return HttpResponsePermanentRedirect('/cabinets')
+    return HttpResponseNotFound("<h1>Not found post</h1>")
+
+def delete_cabinet(request:HttpRequest, id=None):
+    if id:
+        cabinet = Cabinet.objects.get(id=id)
+        cabinet.delete()
+        return HttpResponsePermanentRedirect('/cabinets')
+    return HttpResponseNotFound('<h1>id not found</h1')
 
 def clear_session(request:HttpRequest):
     request.session.clear()

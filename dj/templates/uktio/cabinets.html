@@ -1,0 +1,41 @@
+{% extends "uktio/base_generic.html"%}
+{% load i18n %}
+
+{%block content%}
+    <div class="container">
+    <div class="row">
+        <p></p>
+        <div class="col-6">
+            {% if cabinets %}
+                <table class="table table-striped">
+                    <thead>
+                        <th>{%trans 'Name' %}</th>
+                        <th>{%trans 'Description' %}</th>
+                        <th>{%trans 'Organization' %}</th>
+                    </thead>
+                    <tbody>
+                        {% for i_cabinet in cabinets.all %}
+                            <tr>
+                                <td>{{i_cabinet.name}}</td>
+                                <td>{{i_cabinet.description}}</td>
+                                <td>{{i_cabinet.organization.name}}</td>
+                                <td><a href='/cabinets/{{i_cabinet.id}}'>{%trans 'Change'%}</a></td>
+                                <td><a href='/delete_cabinet/{{i_cabinet.id}}'>{%trans 'Delete'%}</a>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+        <div class="col-6">
+            <form action="/save_cabinet" method="POST">
+                {% csrf_token %}
+                <table>
+                    {{cabinet_form}}
+                </table>
+                <input type="submit" value="{% trans 'Save' %}" />
+            </form>
+        </div>
+    </div>
+    </div>
+{%endblock%}

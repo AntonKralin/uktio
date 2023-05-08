@@ -25,3 +25,11 @@ class WorkerForm(forms.Form):
     organization = forms.ChoiceField(choices=[], required=True,
                                      label="Организация")
     
+
+class CabinetForm(forms.Form):
+    id = forms.CharField(widget=forms.HiddenInput(), required=False, initial="")
+    name = forms.CharField(label="Название")
+    description = forms.CharField(label="Описание")
+    organization = forms.ChoiceField(choices=[], required=True,
+                                     label="Организация")
+    

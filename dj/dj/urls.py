@@ -35,6 +35,10 @@ urlpatterns = [
     path('workers', views.workers, name='workers'),
     path('save_worker', views.save_worker, name='save_worker'),
     path('delete_worker/<int:id>',views.delete_worker, name='delete_worker'),
+    path('cabinets/<int:id>', views.cabinets, name='cabinets_edit'),
+    path('cabinets', views.cabinets, name='cabinets'),
+    path('save_cabinet', views.save_cabinet, name='save_cabinet'),
+    path('delete_cabinet/<int:id>', views.delete_cabinet, name='delete_cabinet'),
     path('clear_session', views.clear_session, name='clear_session'),
     path('adminis/', admin.site.urls),
 ]
