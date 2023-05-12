@@ -1,0 +1,22 @@
+{% extends "uktio/base_generic.html"%}
+{% load i18n %}
+
+{%block content%}
+    <div class="container">
+    <div class="row">
+        <p></p>
+        <div class="col-5">
+            
+        </div>
+        <div class="col-5">
+            <form action="/save_user" method="POST">
+                {% csrf_token %}
+                <table>
+                    {{user_form}}
+                </table>
+                <input type="submit" value="{% trans 'Save' %}" />
+            </form>
+        </div>
+    </div>
+    </div>
+{%endblock%}

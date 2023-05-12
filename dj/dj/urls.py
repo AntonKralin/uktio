@@ -39,6 +39,7 @@ urlpatterns = [
     path('cabinets', views.cabinets, name='cabinets'),
     path('save_cabinet', views.save_cabinet, name='save_cabinet'),
     path('delete_cabinet/<int:id>', views.delete_cabinet, name='delete_cabinet'),
+    path('users', views.users, name='users'),
     path('clear_session', views.clear_session, name='clear_session'),
     path('adminis/', admin.site.urls),
 ]

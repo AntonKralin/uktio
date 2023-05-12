@@ -33,3 +33,12 @@ class CabinetForm(forms.Form):
     organization = forms.ChoiceField(choices=[], required=True,
                                      label="Организация")
     
+
+class UsersForm(forms.Form):
+    id = forms.CharField(widget=forms.HiddenInput(), initial="")
+    login = forms.CharField(label='Логин')
+    password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput())
+    password2 = forms.CharField(label='Повтор пароля', widget=forms.PasswordInput())
+    is_view = forms.BooleanField(label="Только просмотр")
+    superuser = forms.BooleanField(label="Суперюзер")
+    

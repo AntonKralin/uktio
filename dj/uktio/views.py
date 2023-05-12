@@ -278,6 +278,14 @@ def delete_cabinet(request:HttpRequest, id=None):
         return HttpResponsePermanentRedirect('/cabinets')
     return HttpResponseNotFound('<h1>id not found</h1')
 
+def users(request:HttpRequest, id=''):
+    id_user = request.session.get('user', None)
+    if id_user:
+        user_form = UsersForm()
+        context = {"user_form": user_form}
+        return render(request, 'uktio/users.html', context=context)
+    return HttpResponseNotFound('<h1>Please logon</h1>')
+
 def clear_session(request:HttpRequest):
     request.session.clear()
     request.session.modified = True
