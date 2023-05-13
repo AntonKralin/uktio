@@ -39,6 +39,5 @@ class UsersForm(forms.Form):
     login = forms.CharField(label='Логин')
     password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput())
     password2 = forms.CharField(label='Повтор пароля', widget=forms.PasswordInput())
-    is_view = forms.BooleanField(label="Только просмотр")
-    superuser = forms.BooleanField(label="Суперюзер")
+    u_type = forms.ChoiceField(choices=[], required=True, label="")
     

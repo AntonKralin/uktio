@@ -13,12 +13,7 @@ class Users(models.Model):
     last_wrong_logon = models.DateTimeField(blank=True, null=True,
                                             verbose_name="DateTime last bad logon",
                                             help_text="Enter DateTime last bad logon")
-    is_superuser = models.BooleanField(default=False,
-                                      verbose_name="Is user Superadmin",
-                                      help_text="True - Superuser, defaulf=False")
-    is_view = models.BooleanField(default=True,
-                                  verbose_name="Is user only view",
-                                  help_text='True - only view, default=True')
+    type = models.IntegerField(verbose_name='Type', help_text='Choice type', max_length=5)
     region = models.ManyToManyField('Region', help_text="Regions")
     organization = models.ManyToManyField('Organization', help_text="Organization")
     
